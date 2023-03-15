@@ -7,6 +7,11 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 
+// 默认读取根目录下 .env 文件作为环境变量
+require("dotenv").config();
+// 连接数据库
+require("./dao/dbConnection.js");
+
 var app = express();
 
 app.use(logger("dev"));
