@@ -27,7 +27,6 @@ exports.ForbiddenError = class extends ErrorService {
     super(message, 401);
   }
 };
-V;
 // 数据验证错误
 exports.ValidatioError = class extends ErrorService {
   construstor(message) {
