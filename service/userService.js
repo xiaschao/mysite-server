@@ -1,10 +1,11 @@
 const md5 = require("md5");
-const { loginDao } = require("../dao/userDao");
+const { loginDao, updateUserDao } = require("../dao/userDao");
 const jwt = require("jsonwebtoken");
+const { ValidatioError } = require("../utils/errors");
 // user 模块业务层
 exports.loginService = async function (loginInfo) {
   loginInfo.loginPwd = md5(loginInfo.loginPwd);
-  let data = await loginDao(loginInfo);
+  let data = await loginDao(loginInfo.loginId, loginInfo.loginPwd);
   let loginPeriod; //token 过期时间
   if (data) {
     // 登录成功
@@ -29,4 +30,17 @@ exports.loginService = async function (loginInfo) {
   return {
     data,
   };
+};
+
+exports.updateService = async function (userInfo) {
+  if (userInfo.oldLoginPwd) userInfo.oldLoginPwd = md5(userInfo.oldLoginPwd);
+  if (userInfo.loginPwd) userInfo.loginPwd = md5(userInfo.loginPwd);
+  const loginRes = await loginDao(userInfo.loginId, userInfo.oldLoginPwd);
+  if (loginRes) {
+    // 旧密码正确
+    await updateUserDao(userInfo);
+    return await loginDao(userInfo.loginId, userInfo.loginPwd);
+  } else {
+    throw new ValidatioError("旧密码错误");
+  }
 };

@@ -49,3 +49,5 @@ exports.UnknownError = class extends ErrorService {
     super("service internal error", 500);
   }
 };
+
+module.exports.ErrorService = ErrorService;

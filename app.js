@@ -6,17 +6,27 @@ const logger = require("morgan");
 const md5 = require("md5");
 const { expressjwt } = require("express-jwt");
 const unlessPath = require("./utils/unlessPath");
-const { ForbiddenError } = require("./utils/errors");
+const { ForbiddenError, ErrorService } = require("./utils/errors");
+const session = require("express-session");
 
 // 默认读取根目录下 .env 文件作为环境变量
 require("dotenv").config();
 // 连接数据库
 require("./dao/db");
 
+require("express-async-errors");
+
 const userRouter = require("./routes/user.js");
 
 const app = express();
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -46,6 +56,8 @@ app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
     // token验证错误
     res.send(new ForbiddenError("未登录或登录已过期！").toResponseJson());
+  } else if (err instanceof ErrorService) {
+    res.send(err.toResponseJson());
   }
 });
 

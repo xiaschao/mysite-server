@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const formatResponse = require("../utils/formatResponse");
 const analysisToken = require("../utils/analysisToken");
-const { loginService } = require("../service/userService.js");
+const { loginService, updateService } = require("../service/userService.js");
 
 router.post("/login", async function (req, res, next) {
   const { data, token } = await loginService(req.body);
@@ -19,6 +19,10 @@ router.get("/whoami", async function (req, res, next) {
       id: tokenInfo.id,
     })
   );
+});
+router.put("/", async function (req, res, next) {
+  const data = await updateService(req.body);
+  res.send(formatResponse(data));
 });
 
 module.exports = router;
