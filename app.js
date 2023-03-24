@@ -16,8 +16,6 @@ require("./dao/db");
 
 require("express-async-errors");
 
-const userRouter = require("./routes/user.js");
-
 const app = express();
 
 app.use(
@@ -42,7 +40,8 @@ app.use(
   })
 );
 
-app.use("/api/admin", userRouter);
+app.use("/api/admin", require("./routes/user.js"));
+app.use("/res", require("./routes/captcha"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

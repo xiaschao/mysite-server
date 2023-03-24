@@ -5,5 +5,9 @@ module.exports = function () {
       url: "/api/admin/login",
       methods: ["POST"],
     },
+    {
+      url: "/res/captcha",
+      methods: ["GET"],
+    },
   ];
 };
