@@ -42,6 +42,7 @@ app.use(
 
 app.use("/api/admin", require("./routes/user.js"));
 app.use("/res", require("./routes/captcha"));
+app.use("/api/banner", require("./routes/banner"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
