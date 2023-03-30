@@ -6,7 +6,7 @@ const logger = require("morgan");
 const md5 = require("md5");
 const { expressjwt } = require("express-jwt");
 const unlessPath = require("./utils/unlessPath");
-const { ForbiddenError, ErrorService } = require("./utils/errors");
+const { ForbiddenError, ErrorService, UnknownError } = require("./utils/errors");
 const session = require("express-session");
 
 // 默认读取根目录下 .env 文件作为环境变量
@@ -43,6 +43,7 @@ app.use(
 app.use("/api/admin", require("./routes/user.js"));
 app.use("/res", require("./routes/captcha"));
 app.use("/api/banner", require("./routes/banner"));
+app.use("/api/upload", require("./routes/upload"));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -58,6 +59,8 @@ app.use(function (err, req, res, next) {
     res.send(new ForbiddenError("未登录或登录已过期！").toResponseJson());
   } else if (err instanceof ErrorService) {
     res.send(err.toResponseJson());
+  } else {
+    res.send(new UnknownError().toResponseJson());
   }
 });
 

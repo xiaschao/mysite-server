@@ -1,6 +1,6 @@
 const bannerModel = require("./models/bannerModel");
 
-exports.findBannerDao = async function () {
+async function findBannerDao() {
   const data = await bannerModel.findAll({
     attributes: ["id", "midImg", "bigImg", "title", "description"],
   });
@@ -9,4 +9,17 @@ exports.findBannerDao = async function () {
   } else {
     return null;
   }
+}
+
+async function updateBannerDao(bannerArr) {
+  await bannerModel.destroy({
+    truncate: true,
+  });
+  await bannerModel.bulkCreate(bannerArr);
+  return findBannerDao();
+}
+
+module.exports = {
+  findBannerDao,
+  updateBannerDao,
 };

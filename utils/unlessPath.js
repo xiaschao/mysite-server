@@ -6,7 +6,7 @@ module.exports = function () {
       methods: ["POST"],
     },
     {
-      url: "/api/banner",
+      url: /.*/,
       methods: ["GET"],
     },
   ];
